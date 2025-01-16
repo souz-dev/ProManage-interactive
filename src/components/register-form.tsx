@@ -1,45 +1,77 @@
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+'use client';
 
-export function RegisterForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { registerUserSchema } from '@/schemas/registerUserSchema';
+
+export type FormData = z.infer<typeof registerUserSchema>;
+
+interface IRegisterFormProps {
+  registerAction: (formData: FormData) => void;
+}
+
+export function RegisterForm({ registerAction }: IRegisterFormProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<FormData>({
+    resolver: zodResolver(registerUserSchema),
+  });
+
+  const onSubmit = (data: FormData) => {
+    registerAction(data);
+    reset();
+  };
+
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className="flex flex-col gap-6">
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Register</CardTitle>
-          <CardDescription>Create your account to acess the plataform.</CardDescription>
+          <CardDescription>Create your account to access the platform.</CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" type="text" placeholder="m@example.com" required />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" required />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" placeholder="********" required />
-              </div>
-              <Button type="submit" className="w-full">
-                Create account
-              </Button>
-              <Button variant="outline" className="w-full">
-                Login with Google
-              </Button>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
+            <div className="grid gap-2">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" {...register('name')} type="text" placeholder="Your name" required />
+              {errors.name && <span>{errors.name.message}</span>}
             </div>
-            <div className="mt-4 text-center text-sm">
-              Already have an account?{' '}
-              <a href="/login" className="underline underline-offset-4">
-                Sign in
-              </a>
+            <div className="grid gap-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                {...register('email')}
+                type="email"
+                placeholder="m@example.com"
+                required
+              />
+              {errors.email && <span>{errors.email.message}</span>}
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                {...register('password')}
+                type="password"
+                placeholder="********"
+                required
+              />
+              {errors.password && <span>{errors.password.message}</span>}
+            </div>
+            <Button type="submit" className="w-full">
+              Create account
+            </Button>
+            <Button variant="outline" className="w-full">
+              Login with Google
+            </Button>
           </form>
         </CardContent>
       </Card>
