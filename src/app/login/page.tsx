@@ -24,7 +24,7 @@ export default function Page() {
       await signIn('credentials', {
         email,
         password,
-        redirectTo: '/',
+        redirectTo: '/dash',
       });
 
       toast.success('Logged in successfully');

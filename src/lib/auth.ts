@@ -4,7 +4,7 @@ import { db } from './prisma.client';
 import { compare } from 'bcryptjs';
 import { loginSchema } from '@/schemas/loginSchema';
 
-export const { signIn } = NextAuth({
+export const { signIn, auth } = NextAuth({
   providers: [
     Credentials({
       authorize: async (credentials) => {
