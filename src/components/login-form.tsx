@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { loginSchema } from '@/schemas/loginSchema';
 import { z } from 'zod';
+import { signIn } from 'next-auth/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { startTransition, useActionState } from 'react';
@@ -81,7 +82,13 @@ export function LoginForm({ loginAction }: ILoginFormProps) {
               {isPending && <Loader2Icon className="mr-2 animate-spin" size={16} />}
               Login
             </Button>
-            <Button type="button" variant="outline" className="w-full" disabled={isPending}>
+            <Button
+              onClick={() => signIn('google')}
+              type="button"
+              variant="outline"
+              className="w-full"
+              disabled={isPending}
+            >
               Login with Google
             </Button>
           </form>

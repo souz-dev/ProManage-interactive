@@ -2,12 +2,15 @@ import { RegisterForm } from '@/components/register-form';
 import { db } from '@/lib/prisma.client';
 import { hash } from 'bcryptjs';
 import { registerUserSchema } from '@/schemas/registerUserSchema';
+import { redirect } from 'next/navigation';
+import { toast } from 'sonner';
 
 export interface FormData {
   name: string;
   email: string;
   password: string;
 }
+
 export default function Page() {
   async function registerAction(formData: FormData) {
     'use server';
@@ -17,10 +20,8 @@ export default function Page() {
     );
 
     if (!success) {
-      console.error(error);
-      return;
+      return { success: false, error };
     }
-    console.log(data);
     const { name, email, password } = data;
     const hashedPassword = await hash(password, 12);
 
@@ -31,11 +32,25 @@ export default function Page() {
         password: hashedPassword,
       },
     });
+
+    return { success: true };
   }
+
+  async function handleRegister(formData: FormData) {
+    'use server';
+
+    const result = await registerAction(formData);
+    if (result.success) {
+      return redirect('/login');
+    } else {
+      toast.error(result.error?.message || 'An unknown error occurred');
+    }
+  }
+
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <RegisterForm registerAction={registerAction} />
+        <RegisterForm registerAction={handleRegister} />
       </div>
     </div>
   );
