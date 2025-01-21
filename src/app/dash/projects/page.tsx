@@ -5,6 +5,8 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { ProjectCard } from './_components/project-card';
 import { ProjectTable } from './_components/project-table';
+import { Button } from '@/components/ui/button';
+import { CreateProjectModal } from './_components/create-project-modal';
 
 const projects = [
   {
@@ -38,7 +40,7 @@ const projects = [
 
 export default function ProjectsPage() {
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -52,18 +54,20 @@ export default function ProjectsPage() {
             />
             <Label htmlFor="view-mode">Table View</Label>
           </div>
+          <Button onClick={() => setIsModalOpen(true)}>Create New Project</Button>
         </div>
       </div>
 
       {viewMode === 'card' ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} onEdit={() => console.log()} />
+            <ProjectCard key={project.id} project={project} onEdit={() => setIsModalOpen(true)} />
           ))}
         </div>
       ) : (
-        <ProjectTable projects={projects} onEdit={() => console.log()} />
+        <ProjectTable projects={projects} onEdit={() => setIsModalOpen(true)} />
       )}
+      <CreateProjectModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 }
