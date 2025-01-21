@@ -3,9 +3,9 @@
 import { Button } from '@/components/ui/button';
 import { LayoutDashboard } from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
-import { signOutAction } from '../_actions/singOutAction';
+import { signOutAction } from '@/actions/singOutAction';
 
-export function Header() {
+export function Navbar() {
   return (
     <header className="border-b">
       <div className="flex h-16 items-center gap-4 px-4">
