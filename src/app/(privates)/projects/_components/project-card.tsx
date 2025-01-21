@@ -4,6 +4,8 @@ import { Edit } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { Task } from '@prisma/client';
+
 interface ProjectCardProps {
   project: {
     id: string | number;
@@ -13,6 +15,7 @@ interface ProjectCardProps {
     startDate: string;
     endDate: string;
     responsible: string;
+    tasks: Task[];
   };
   onEdit: (id: number) => void;
 }
@@ -23,8 +26,17 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
     delayed: 'text-yellow-600',
     completed: 'text-blue-600',
   };
+
   const formattedStartDate = format(new Date(project.startDate), 'dd/MM/yyyy');
   const formattedEndDate = format(new Date(project.endDate), 'dd/MM/yyyy');
+
+  const tasksPercentage =
+    project.tasks.length === 0
+      ? 0
+      : Math.round(
+          (project.tasks.filter((task) => task.completed).length / project.tasks.length) * 100,
+        );
+
   return (
     <Card>
       <CardHeader>
@@ -40,7 +52,7 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
           <span className={`font-semibold ${statusColors[project.status]}`}>
             {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
           </span>
-          <span>{project.progress}%</span>
+          <span>{tasksPercentage}%</span>
         </div>
         <Progress value={project.progress} className="mb-4" />
         <div className="mb-2 text-sm text-gray-600">

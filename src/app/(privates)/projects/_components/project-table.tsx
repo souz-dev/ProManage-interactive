@@ -9,6 +9,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
 import { format } from 'date-fns';
+import { Task } from '@prisma/client';
 
 interface Project {
   id: number;
@@ -18,6 +19,7 @@ interface Project {
   startDate: string;
   endDate: string;
   responsible: string;
+  tasks: Task[];
 }
 
 interface ProjectTableProps {
@@ -46,25 +48,35 @@ export function ProjectTable({ projects, onEdit }: ProjectTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {projects.map((project) => (
-          <TableRow key={project.id}>
-            <TableCell>{project.name}</TableCell>
-            <TableCell>
-              <span className={`font-semibold ${statusColors[project.status]}`}>
-                {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
-              </span>
-            </TableCell>
-            {/* <TableCell>{project}%</TableCell> */}
-            <TableCell>{format(new Date(project.startDate), 'dd/MM/yyyy')}</TableCell>
-            <TableCell>{format(new Date(project.startDate), 'dd/MM/yyyy')}</TableCell>
-            <TableCell>{project.responsible}</TableCell>
-            <TableCell>
-              <Button variant="ghost" size="icon" onClick={() => onEdit(project.id)}>
-                <Edit className="h-4 w-4" />
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
+        {projects.map((project) => {
+          const tasksPercentage =
+            project.tasks.length === 0
+              ? 0
+              : Math.round(
+                  (project.tasks.filter((task) => task.completed).length / project.tasks.length) *
+                    100,
+                );
+
+          return (
+            <TableRow key={project.id}>
+              <TableCell>{project.name}</TableCell>
+              <TableCell>
+                <span className={`font-semibold ${statusColors[project.status]}`}>
+                  {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                </span>
+              </TableCell>
+              <TableCell>{tasksPercentage}%</TableCell>
+              <TableCell>{format(new Date(project.startDate), 'dd/MM/yyyy')}</TableCell>
+              <TableCell>{format(new Date(project.startDate), 'dd/MM/yyyy')}</TableCell>
+              <TableCell>{project.responsible}</TableCell>
+              <TableCell>
+                <Button variant="ghost" size="icon" onClick={() => onEdit(project.id)}>
+                  <Edit className="h-4 w-4" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );
