@@ -22,6 +22,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { addProjectAction } from '@/actions/addProjectAction';
+import { toast } from 'sonner';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Project name is required'),
@@ -36,9 +38,10 @@ type FormValues = z.infer<typeof formSchema>;
 interface CreateProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
+  currentUserId: string;
 }
 
-export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps) {
+export function CreateProjectModal({ isOpen, onClose, currentUserId }: CreateProjectModalProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,9 +53,21 @@ export function CreateProjectModal({ isOpen, onClose }: CreateProjectModalProps)
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
-    onClose();
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const formatedData = {
+        ...data,
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
+      };
+      await addProjectAction(formatedData, currentUserId);
+      toast.success('Project created successfully');
+      onClose();
+    } catch (error) {
+      toast.error('Failed to add project. Please try again.');
+
+      console.error(error);
+    }
   };
 
   return (

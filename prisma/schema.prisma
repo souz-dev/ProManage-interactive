@@ -51,16 +51,15 @@ enum ProjectStatus {
 model Project {
   id          String        @id @default(uuid()) @db.Uuid
   name        String
-  status      ProjectStatus
-  progress    Int
+  status      ProjectStatus @default(ACTIVE) // Status 'ACTIVE' por padrão
   startDate   DateTime
   endDate     DateTime
   responsible String
-  description String
-  tasks       Task[]
-  comments    Comment[]
+  description String? // Descrição opcional
+  tasks       Task[] // Relacionamento opcional (será um array vazio se não houver tarefas)
+  comments    Comment[] // Relacionamento opcional (será um array vazio se não houver comentários)
 
-  userId String? @db.Uuid // Relacionamento opcional com o User
+  userId String? @db.Uuid // Relacionamento opcional com User
   user   User?   @relation(fields: [userId], references: [id])
 
   @@map("projects")

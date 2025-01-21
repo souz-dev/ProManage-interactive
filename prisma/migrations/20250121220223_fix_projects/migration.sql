@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "projects" ALTER COLUMN "status" SET DEFAULT 'ACTIVE',
+ALTER COLUMN "progress" SET DEFAULT 0,
+ALTER COLUMN "description" DROP NOT NULL;

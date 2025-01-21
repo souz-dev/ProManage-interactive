@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
+import { format } from 'date-fns';
 
 interface Project {
   id: number;
@@ -53,9 +54,9 @@ export function ProjectTable({ projects, onEdit }: ProjectTableProps) {
                 {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
               </span>
             </TableCell>
-            <TableCell>{project.progress}%</TableCell>
-            <TableCell>{project.startDate}</TableCell>
-            <TableCell>{project.endDate}</TableCell>
+            {/* <TableCell>{project}%</TableCell> */}
+            <TableCell>{format(new Date(project.startDate), 'dd/MM/yyyy')}</TableCell>
+            <TableCell>{format(new Date(project.startDate), 'dd/MM/yyyy')}</TableCell>
             <TableCell>{project.responsible}</TableCell>
             <TableCell>
               <Button variant="ghost" size="icon" onClick={() => onEdit(project.id)}>

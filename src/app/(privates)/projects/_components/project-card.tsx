@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
-
+import { format } from 'date-fns';
 interface ProjectCardProps {
   project: {
     id: string | number;
@@ -23,7 +23,8 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
     delayed: 'text-yellow-600',
     completed: 'text-blue-600',
   };
-
+  const formattedStartDate = format(new Date(project.startDate), 'dd/MM/yyyy');
+  const formattedEndDate = format(new Date(project.endDate), 'dd/MM/yyyy');
   return (
     <Card>
       <CardHeader>
@@ -43,8 +44,8 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
         </div>
         <Progress value={project.progress} className="mb-4" />
         <div className="mb-2 text-sm text-gray-600">
-          <p>Start: {project.startDate}</p>
-          <p>End: {project.endDate}</p>
+          <p>Start: {formattedStartDate}</p>
+          <p>End: {formattedEndDate}</p>
           <p>Responsible: {project.responsible}</p>
         </div>
         <Link href={`/projects/${project.id}`}>

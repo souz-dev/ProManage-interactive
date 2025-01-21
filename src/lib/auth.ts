@@ -40,7 +40,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         if (!isPasswordValid) {
           return null;
         }
-
+        console.log(user);
         return {
           id: user.id,
           email: user.email,
@@ -49,4 +49,10 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      session.user.id = token.id as string;
+      return session;
+    },
+  },
 });
