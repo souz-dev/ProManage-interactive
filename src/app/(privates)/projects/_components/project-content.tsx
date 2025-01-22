@@ -12,12 +12,23 @@ import { CreateProjectModal } from './create-project-modal';
 interface IProjectContentProps {
   projects: any[];
   currentUserId: string;
+  currentUserName: string;
 }
 
-export function ProjectContent({ projects, currentUserId }: IProjectContentProps) {
+export function ProjectContent({ projects, currentUserId, currentUserName }: IProjectContentProps) {
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
 
+  const handleEdit = (project: any) => {
+    setSelectedProject(project);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProject(null);
+  };
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -38,16 +49,19 @@ export function ProjectContent({ projects, currentUserId }: IProjectContentProps
       {viewMode === 'card' ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} onEdit={() => setIsModalOpen(true)} />
+            <ProjectCard key={project.id} project={project} onEdit={() => handleEdit(project)} />
           ))}
         </div>
       ) : (
-        <ProjectTable projects={projects} onEdit={() => setIsModalOpen(true)} />
+        <ProjectTable projects={projects} onEdit={(project) => handleEdit(project)} />
       )}
+
       <CreateProjectModal
         currentUserId={currentUserId}
+        currentUserName={currentUserName}
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
+        currentProject={selectedProject}
       />
     </div>
   );

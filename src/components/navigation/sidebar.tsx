@@ -3,23 +3,18 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Home, FolderKanban, Settings } from 'lucide-react';
+import { Home, FolderKanban } from 'lucide-react';
 
 const routes = [
   {
     label: 'Overview',
     icon: Home,
-    href: '/',
+    href: '/dash',
   },
   {
     label: 'Projects',
     icon: FolderKanban,
     href: '/projects',
-  },
-  {
-    label: 'Settings',
-    icon: Settings,
-    href: '/settings',
   },
 ];
 

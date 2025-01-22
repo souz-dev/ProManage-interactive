@@ -24,7 +24,7 @@ interface Project {
 
 interface ProjectTableProps {
   projects: Project[];
-  onEdit: (id: number) => void;
+  onEdit: (project: Project) => void;
 }
 
 export function ProjectTable({ projects, onEdit }: ProjectTableProps) {
@@ -80,7 +80,7 @@ export function ProjectTable({ projects, onEdit }: ProjectTableProps) {
               <TableCell>{format(new Date(project.startDate), 'dd/MM/yyyy')}</TableCell>
               <TableCell>{project.responsible}</TableCell>
               <TableCell>
-                <Button variant="ghost" size="icon" onClick={() => onEdit(project.id)}>
+                <Button variant="ghost" size="icon" onClick={() => onEdit(project)}>
                   <Edit className="h-4 w-4" />
                 </Button>
               </TableCell>

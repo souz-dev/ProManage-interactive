@@ -24,5 +24,11 @@ export default async function ProjectsPage() {
 
   console.log(projects);
 
-  return <ProjectContent projects={projects} currentUserId={currentUser.id} />;
+  return (
+    <ProjectContent
+      projects={projects}
+      currentUserId={currentUser.id}
+      currentUserName={currentUser.name}
+    />
+  );
 }

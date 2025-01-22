@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { startTransition, useActionState } from 'react';
 import { Loader2Icon } from 'lucide-react';
 import { toast } from 'sonner';
+import { ModeToggle } from './mode-toggle';
 export type FormData = z.infer<typeof loginSchema>;
 
 interface ILoginFormProps {
@@ -49,7 +50,10 @@ export function LoginForm({ loginAction }: ILoginFormProps) {
     <div className="flex flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Login</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-2xl">Login</CardTitle>
+            <ModeToggle />
+          </div>
           <CardDescription>Enter your email below to login to your account</CardDescription>
         </CardHeader>
         <CardContent>

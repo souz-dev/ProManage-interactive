@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/lib/auth';
 import { Inter } from 'next/font/google';
+import { Providers } from './providers/providers';
 export const metadata: Metadata = {
   title: 'Promanage Interactive',
   description: 'Gerencie seus projetos de forma eficiente',
@@ -19,10 +20,12 @@ export default async function RootLayout({
   const sessioon = await auth();
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <SessionProvider session={sessioon}>{children}</SessionProvider>
-        <Toaster />
-      </body>
+      <Providers>
+        <body className={inter.className}>
+          <SessionProvider session={sessioon}>{children}</SessionProvider>
+          <Toaster />
+        </body>
+      </Providers>
     </html>
   );
 }

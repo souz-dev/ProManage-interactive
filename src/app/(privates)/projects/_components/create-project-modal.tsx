@@ -24,6 +24,9 @@ import {
 } from '@/components/ui/form';
 import { addProjectAction } from '@/actions/addProjectAction';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
+import { updateProjectAction } from '@/actions/updateProjectAction';
+import { format } from 'date-fns';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Project name is required'),
@@ -35,13 +38,25 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+interface CurrentProject extends FormValues {
+  id: string;
+}
+
 interface CreateProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentUserId: string;
+  currentUserName: string;
+  currentProject?: CurrentProject;
 }
 
-export function CreateProjectModal({ isOpen, onClose, currentUserId }: CreateProjectModalProps) {
+export function CreateProjectModal({
+  isOpen,
+  onClose,
+  currentUserId,
+  currentProject,
+  currentUserName,
+}: CreateProjectModalProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,17 +67,35 @@ export function CreateProjectModal({ isOpen, onClose, currentUserId }: CreatePro
       responsible: '',
     },
   });
+  const handleOnClose = () => {
+    form.reset();
+    onClose();
+  };
 
   const onSubmit = async (data: FormValues) => {
+    const formatedData = {
+      ...data,
+      startDate: new Date(data.startDate),
+      endDate: new Date(data.endDate),
+    };
+    if (currentProject) {
+      try {
+        await updateProjectAction(formatedData, currentProject.id);
+        toast.success('Project updated successfully');
+        handleOnClose();
+      } catch (error) {
+        toast.error('Failed to update project. Please try again.');
+
+        console.error(error);
+      }
+
+      return;
+    }
+
     try {
-      const formatedData = {
-        ...data,
-        startDate: new Date(data.startDate),
-        endDate: new Date(data.endDate),
-      };
       await addProjectAction(formatedData, currentUserId);
       toast.success('Project created successfully');
-      onClose();
+      handleOnClose();
     } catch (error) {
       toast.error('Failed to add project. Please try again.');
 
@@ -70,8 +103,18 @@ export function CreateProjectModal({ isOpen, onClose, currentUserId }: CreatePro
     }
   };
 
+  useEffect(() => {
+    if (currentProject) {
+      form.setValue('name', currentProject.name);
+      form.setValue('startDate', format(new Date(currentProject.startDate), 'yyyy-MM-dd'));
+      form.setValue('endDate', format(new Date(currentProject.endDate), 'yyyy-MM-dd'));
+      form.setValue('description', currentProject.description);
+      form.setValue('responsible', currentProject.responsible);
+    }
+  }, [currentProject, form]);
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleOnClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>
@@ -143,9 +186,7 @@ export function CreateProjectModal({ isOpen, onClose, currentUserId }: CreatePro
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="john">John Doe</SelectItem>
-                      <SelectItem value="jane">Jane Smith</SelectItem>
-                      <SelectItem value="bob">Bob Johnson</SelectItem>
+                      <SelectItem value={currentUserName}>{currentUserName}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -153,7 +194,7 @@ export function CreateProjectModal({ isOpen, onClose, currentUserId }: CreatePro
               )}
             />
             <Button type="submit" className="w-full">
-              Create Project
+              {!currentProject ? 'Create Project' : 'Update Project'}
             </Button>
           </form>
         </Form>
