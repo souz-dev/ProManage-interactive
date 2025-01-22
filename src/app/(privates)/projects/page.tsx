@@ -22,8 +22,6 @@ export default async function ProjectsPage() {
     },
   });
 
-  console.log(projects);
-
   return (
     <ProjectContent
       projects={projects}

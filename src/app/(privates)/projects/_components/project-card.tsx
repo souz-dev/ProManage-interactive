@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import { Task } from '@prisma/client';
+import { calculateTasksPercentage } from '@/utils/tasksPercentage';
+import { formatDate } from '@/utils/formatDate';
+import { getProjectStatus } from '@/utils/projectStatus';
 
 interface ProjectCardProps {
   project: {
@@ -26,25 +28,9 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
     completed: 'text-blue-600',
   };
 
-  const formattedStartDate = format(new Date(project.startDate), 'dd/MM/yyyy');
-  const formattedEndDate = format(new Date(project.endDate), 'dd/MM/yyyy');
+  const tasksPercentage = calculateTasksPercentage(project);
+  const projectStatus = getProjectStatus(project);
 
-  const tasksPercentage =
-    project.tasks.length === 0
-      ? 0
-      : Math.round(
-          (project.tasks.filter((task) => task.completed).length / project.tasks.length) * 100,
-        );
-
-  const allTasksCompleted = project.tasks.every((task) => task.completed);
-  const isDelayed = new Date(project.endDate) < new Date();
-
-  let projectStatus: 'active' | 'delayed' | 'completed' = 'active';
-  if (allTasksCompleted) {
-    projectStatus = 'completed';
-  } else if (isDelayed) {
-    projectStatus = 'delayed';
-  }
   return (
     <Card>
       <CardHeader>
@@ -64,8 +50,8 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
         </div>
         <Progress value={project.progress} className="mb-4" />
         <div className="mb-2 text-sm text-gray-600">
-          <p>Start: {formattedStartDate}</p>
-          <p>End: {formattedEndDate}</p>
+          <p>Start: {formatDate(project.startDate)}</p>
+          <p>End: {formatDate(project.endDate)}</p>
           <p>Responsible: {project.responsible}</p>
         </div>
         <Link href={`/projects/${project.id}`}>

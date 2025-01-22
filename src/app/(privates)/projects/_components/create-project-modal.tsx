@@ -24,17 +24,9 @@ import {
 } from '@/components/ui/form';
 import { addProjectAction } from '@/actions/addProjectAction';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
 import { updateProjectAction } from '@/actions/updateProjectAction';
 import { format } from 'date-fns';
-
-const formSchema = z.object({
-  name: z.string().min(1, 'Project name is required'),
-  startDate: z.string().min(1, 'Start date is required'),
-  endDate: z.string().min(1, 'End date is required'),
-  description: z.string().min(1, 'Description is required'),
-  responsible: z.string().min(1, 'Responsible person is required'),
-});
+import { formSchema } from '@/schemas/projectSchema';
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -59,12 +51,12 @@ export function CreateProjectModal({
 }: CreateProjectModalProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      startDate: '',
-      endDate: '',
-      description: '',
-      responsible: '',
+    values: {
+      name: currentProject ? currentProject.name : '',
+      startDate: currentProject ? format(new Date(currentProject.startDate), 'yyyy-MM-dd') : '',
+      endDate: currentProject ? format(new Date(currentProject.endDate), 'yyyy-MM-dd') : '',
+      description: currentProject ? currentProject.description : '',
+      responsible: currentProject ? currentProject.responsible : currentUserName,
     },
   });
   const handleOnClose = () => {
@@ -102,16 +94,6 @@ export function CreateProjectModal({
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    if (currentProject) {
-      form.setValue('name', currentProject.name);
-      form.setValue('startDate', format(new Date(currentProject.startDate), 'yyyy-MM-dd'));
-      form.setValue('endDate', format(new Date(currentProject.endDate), 'yyyy-MM-dd'));
-      form.setValue('description', currentProject.description);
-      form.setValue('responsible', currentProject.responsible);
-    }
-  }, [currentProject, form]);
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOnClose}>

@@ -40,7 +40,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         if (!isPasswordValid) {
           return null;
         }
-        console.log(user);
         return {
           id: user.id,
           email: user.email,

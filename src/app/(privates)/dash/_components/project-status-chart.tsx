@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import { calculateProjectStatusCounts } from '@/utils/projectStatusCounts';
 import { Cell, Pie, PieChart, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 interface IProjectStatusChartProps {
@@ -10,23 +11,7 @@ interface IProjectStatusChartProps {
 const COLORS = ['#3b82f6', '#10b981', '#ef4444'];
 
 export function ProjectStatusChart({ projects }: IProjectStatusChartProps) {
-  const projectStatusCounts = projects?.reduce(
-    (acc, project) => {
-      const allTasksCompleted = project.tasks.every((task: any) => task.completed);
-      const isDelayed = new Date(project.endDate) < new Date();
-
-      if (allTasksCompleted) {
-        acc.concluidos += 1;
-      } else if (isDelayed) {
-        acc.atrasados += 1;
-      } else {
-        acc.ativos += 1;
-      }
-
-      return acc;
-    },
-    { ativos: 0, concluidos: 0, atrasados: 0 },
-  );
+  const projectStatusCounts = calculateProjectStatusCounts(projects);
 
   const projectStatusData = [
     { name: 'Ativos', value: projectStatusCounts?.ativos },

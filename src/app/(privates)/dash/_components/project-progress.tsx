@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+import { calculateTasksPercentage } from '@/utils/tasksPercentage';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 interface ProjectProgressProps {
@@ -8,21 +9,14 @@ interface ProjectProgressProps {
 
 export function ProjectProgress({ projects }: ProjectProgressProps) {
   const projectProgress = projects.map((project) => {
-    const tasksPercentage: number =
-      project.tasks.length === 0
-        ? 0
-        : Math.round(
-            (project.tasks.filter((task: { completed: boolean }) => task.completed).length /
-              project.tasks.length) *
-              100,
-          );
+    const tasksPercentage = calculateTasksPercentage(project);
 
     return {
       name: project.name,
       percentage: tasksPercentage,
     };
   });
-  console.log(projectProgress);
+
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart key={Math.random()} data={projectProgress}>

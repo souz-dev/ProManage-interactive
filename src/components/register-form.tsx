@@ -8,6 +8,7 @@ import { Label } from './ui/label';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { registerUserSchema } from '@/schemas/registerUserSchema';
+import { signIn } from 'next-auth/react';
 
 export type FormData = z.infer<typeof registerUserSchema>;
 
@@ -69,7 +70,12 @@ export function RegisterForm({ registerAction }: IRegisterFormProps) {
             <Button type="submit" className="w-full">
               Create account
             </Button>
-            <Button variant="outline" className="w-full">
+            <Button
+              onClick={() => signIn('google')}
+              type="button"
+              variant="outline"
+              className="w-full"
+            >
               Login with Google
             </Button>
           </form>

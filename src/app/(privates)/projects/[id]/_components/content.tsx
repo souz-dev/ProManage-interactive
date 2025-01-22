@@ -14,6 +14,9 @@ import { toast } from 'sonner';
 import { updateTaskAction } from '@/actions/updateTaskAction';
 import { auth } from '@/lib/auth';
 import { addCommentAction } from '@/actions/addCommentAction';
+import { calculateTasksPercentage } from '@/utils/tasksPercentage';
+import { getProjectStatus } from '@/utils/projectStatus';
+import { formatDate } from '@/utils/formatDate';
 
 interface IContentProps {
   projectData: Project & {
@@ -70,26 +73,8 @@ export function Content({ projectData }: IContentProps) {
     }
   };
 
-  const formattedStartDate = format(new Date(projectData.startDate), 'dd/MM/yyyy');
-  const formattedEndDate = format(new Date(projectData.endDate), 'dd/MM/yyyy');
-
-  const tasksPercentage =
-    projectData.tasks.length === 0
-      ? 0
-      : Math.round(
-          (projectData.tasks.filter((task) => task.completed).length / projectData.tasks.length) *
-            100,
-        );
-
-  const allTasksCompleted = projectData.tasks.every((task) => task.completed);
-  const isDelayed = new Date(projectData.endDate) < new Date();
-
-  let projectStatus: 'active' | 'delayed' | 'completed' = 'active';
-  if (allTasksCompleted) {
-    projectStatus = 'completed';
-  } else if (isDelayed) {
-    projectStatus = 'delayed';
-  }
+  const tasksPercentage = calculateTasksPercentage(projectData);
+  const projectStatus = getProjectStatus(projectData);
 
   return (
     <div>
@@ -107,10 +92,10 @@ export function Content({ projectData }: IContentProps) {
               <strong>Responsible:</strong> {projectData.responsible}
             </p>
             <p>
-              <strong>Start Date:</strong> {formattedStartDate}
+              <strong>Start Date:</strong> {formatDate(projectData.startDate)}
             </p>
             <p>
-              <strong>End Date:</strong> {formattedEndDate}
+              <strong>End Date:</strong> {formatDate(projectData.endDate)}
             </p>
             <p>
               <strong>Description:</strong> {projectData.description}

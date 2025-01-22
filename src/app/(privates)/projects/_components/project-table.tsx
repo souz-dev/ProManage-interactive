@@ -10,6 +10,8 @@ import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import { Task } from '@prisma/client';
+import { calculateTasksPercentage } from '@/utils/tasksPercentage';
+import { getProjectStatus } from '@/utils/projectStatus';
 
 interface Project {
   id: number;
@@ -49,23 +51,8 @@ export function ProjectTable({ projects, onEdit }: ProjectTableProps) {
       </TableHeader>
       <TableBody>
         {projects.map((project) => {
-          const tasksPercentage =
-            project.tasks.length === 0
-              ? 0
-              : Math.round(
-                  (project.tasks.filter((task) => task.completed).length / project.tasks.length) *
-                    100,
-                );
-
-          const allTasksCompleted = project.tasks.every((task) => task.completed);
-          const isDelayed = new Date(project.endDate) < new Date();
-
-          let projectStatus: 'active' | 'delayed' | 'completed' = 'active';
-          if (allTasksCompleted) {
-            projectStatus = 'completed';
-          } else if (isDelayed) {
-            projectStatus = 'delayed';
-          }
+          const tasksPercentage = calculateTasksPercentage(project);
+          const projectStatus = getProjectStatus(project);
 
           return (
             <TableRow key={project.id}>
