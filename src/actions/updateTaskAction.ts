@@ -4,11 +4,13 @@
 import { db } from '@/lib/prisma.client';
 import { revalidatePath } from 'next/cache';
 
-export async function addProjectAction(params: any, currentUserId: string) {
-  await db.project.create({
+export async function updateTaskAction(completed: boolean, taskId: string) {
+  await db.task.update({
+    where: {
+      id: taskId,
+    },
     data: {
-      ...params,
-      userId: currentUserId,
+      completed: completed,
     },
   });
 

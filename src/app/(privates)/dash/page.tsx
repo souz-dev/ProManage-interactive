@@ -55,7 +55,7 @@ export default async function Home() {
         </CardContent>
       </Card>
       <div>
-        <Link href="/projetos" className="text-blue-500 hover:underline">
+        <Link href="/projects" className="text-blue-500 hover:underline">
           Ver todos os projetos
         </Link>
       </div>
