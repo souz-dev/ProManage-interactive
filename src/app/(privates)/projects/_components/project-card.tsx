@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Edit } from 'lucide-react';
+import { Delete, Edit } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
 import { Task } from '@prisma/client';
 import { calculateTasksPercentage } from '@/utils/tasksPercentage';
 import { formatDate } from '@/utils/formatDate';
 import { getProjectStatus } from '@/utils/projectStatus';
+import { deleteProjectAction } from '@/actions/deleteProjectAction';
+import { toast } from 'sonner';
 
 interface ProjectCardProps {
   project: {
@@ -31,14 +33,29 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
   const tasksPercentage = calculateTasksPercentage(project);
   const projectStatus = getProjectStatus(project);
 
+  const handleDelete = async (id: string) => {
+    try {
+      deleteProjectAction(id);
+      toast.success('Project deleted successfully');
+    } catch (error) {
+      toast.error('Failed to delete project. Please try again.');
+      console.error(error);
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           {project.name}
-          <Button variant="ghost" size="icon" onClick={() => onEdit(Number(project.id))}>
-            <Edit className="h-4 w-4" />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="icon" onClick={() => onEdit(Number(project.id))}>
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={() => handleDelete(project.id as string)}>
+              <Delete className="h-4 w-4" />
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
