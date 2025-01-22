@@ -10,7 +10,6 @@ interface ProjectCardProps {
   project: {
     id: string | number;
     name: string;
-    status: 'active' | 'delayed' | 'completed';
     progress: number;
     startDate: string;
     endDate: string;
@@ -37,6 +36,15 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
           (project.tasks.filter((task) => task.completed).length / project.tasks.length) * 100,
         );
 
+  const allTasksCompleted = project.tasks.every((task) => task.completed);
+  const isDelayed = new Date(project.endDate) < new Date();
+
+  let projectStatus: 'active' | 'delayed' | 'completed' = 'active';
+  if (allTasksCompleted) {
+    projectStatus = 'completed';
+  } else if (isDelayed) {
+    projectStatus = 'delayed';
+  }
   return (
     <Card>
       <CardHeader>
@@ -49,8 +57,8 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
       </CardHeader>
       <CardContent>
         <div className="mb-2 flex items-center justify-between">
-          <span className={`font-semibold ${statusColors[project.status]}`}>
-            {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+          <span className={`font-semibold ${statusColors[projectStatus]}`}>
+            {projectStatus.charAt(0).toUpperCase() + projectStatus.slice(1)}
           </span>
           <span>{tasksPercentage}%</span>
         </div>

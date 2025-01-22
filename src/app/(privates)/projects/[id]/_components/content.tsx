@@ -81,6 +81,16 @@ export function Content({ projectData }: IContentProps) {
             100,
         );
 
+  const allTasksCompleted = projectData.tasks.every((task) => task.completed);
+  const isDelayed = new Date(projectData.endDate) < new Date();
+
+  let projectStatus: 'active' | 'delayed' | 'completed' = 'active';
+  if (allTasksCompleted) {
+    projectStatus = 'completed';
+  } else if (isDelayed) {
+    projectStatus = 'delayed';
+  }
+
   return (
     <div>
       <h1 className="mb-6 text-3xl font-bold">{projectData.name}</h1>
@@ -91,7 +101,7 @@ export function Content({ projectData }: IContentProps) {
           </CardHeader>
           <CardContent>
             <p>
-              <strong>Status:</strong> {projectData.status}
+              <strong>Status:</strong> {projectStatus}
             </p>
             <p>
               <strong>Responsible:</strong> {projectData.responsible}

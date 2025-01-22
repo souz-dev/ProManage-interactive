@@ -3,15 +3,10 @@ import { redirect } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ProjectProgress } from './_components/project-progress';
 import { ProjectStatusChart } from './_components/project-status-chart';
-import { TaskCompletionChart } from './_components/task-completion-chart';
 import Link from 'next/link';
 import ProjectStatusCard from './_components/projects-status-card';
-
-const projectsData = {
-  active: 5,
-  completed: 3,
-  delayed: 2,
-};
+import { db } from '@/lib/prisma.client';
+import { getCurrentUserAction } from '@/actions/getCurrentUserAction';
 
 export default async function Home() {
   const session = await auth();
@@ -19,14 +14,45 @@ export default async function Home() {
   if (!session) {
     return redirect('/login');
   }
+  const currentUser = await getCurrentUserAction(session?.user?.email as string);
+  if (!currentUser) {
+    return redirect('/login');
+  }
+
+  const projects = await db.project.findMany({
+    where: { userId: currentUser.id },
+    include: {
+      tasks: true,
+    },
+  });
+
+  const projectsStatus = projects.reduce(
+    (acc, project) => {
+      const tasks = project.tasks;
+      const completedTasks = tasks.filter((task) => task.completed);
+      const isCompleted = tasks.length === completedTasks.length;
+      const isDelayed = new Date(project.endDate) < new Date();
+
+      if (isCompleted) {
+        acc.completed += 1;
+      } else if (isDelayed) {
+        acc.delayed += 1;
+      } else {
+        acc.active += 1;
+      }
+
+      return acc;
+    },
+    { completed: 0, delayed: 0, active: 0 },
+  );
 
   return (
     <div className="w-full space-y-6">
       <h1 className="text-3xl font-bold">Bem-vindo ao Gerenciador de Projetos</h1>
       <div className="grid w-full gap-4 md:grid-cols-3">
-        <ProjectStatusCard title="Projetos Ativos" count={projectsData.active} />
-        <ProjectStatusCard title="Projetos Completos" count={projectsData.completed} />
-        <ProjectStatusCard title="Projetos Atrasados" count={projectsData.delayed} />
+        <ProjectStatusCard title="Projetos Ativos" count={projectsStatus.active} />
+        <ProjectStatusCard title="Projetos Completos" count={projectsStatus.completed} />
+        <ProjectStatusCard title="Projetos Atrasados" count={projectsStatus.delayed} />
       </div>
       <div className="grid w-full gap-4 md:grid-cols-2">
         <Card>
@@ -34,7 +60,7 @@ export default async function Home() {
             <CardTitle>Progresso dos Projetos</CardTitle>
           </CardHeader>
           <CardContent>
-            <ProjectProgress />
+            <ProjectProgress projects={projects} />
           </CardContent>
         </Card>
         <Card>
@@ -42,18 +68,11 @@ export default async function Home() {
             <CardTitle>Status dos Projetos</CardTitle>
           </CardHeader>
           <CardContent>
-            <ProjectStatusChart />
+            <ProjectStatusChart projects={projects} />
           </CardContent>
         </Card>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Conclusão de Tarefas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <TaskCompletionChart />
-        </CardContent>
-      </Card>
+
       <div>
         <Link href="/projects" className="text-blue-500 hover:underline">
           Ver todos os projetos

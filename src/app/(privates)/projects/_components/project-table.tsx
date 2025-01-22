@@ -57,12 +57,22 @@ export function ProjectTable({ projects, onEdit }: ProjectTableProps) {
                     100,
                 );
 
+          const allTasksCompleted = project.tasks.every((task) => task.completed);
+          const isDelayed = new Date(project.endDate) < new Date();
+
+          let projectStatus: 'active' | 'delayed' | 'completed' = 'active';
+          if (allTasksCompleted) {
+            projectStatus = 'completed';
+          } else if (isDelayed) {
+            projectStatus = 'delayed';
+          }
+
           return (
             <TableRow key={project.id}>
               <TableCell>{project.name}</TableCell>
               <TableCell>
-                <span className={`font-semibold ${statusColors[project.status]}`}>
-                  {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
+                <span className={`font-semibold ${statusColors[projectStatus]}`}>
+                  {projectStatus.charAt(0).toUpperCase() + projectStatus.slice(1)}
                 </span>
               </TableCell>
               <TableCell>{tasksPercentage}%</TableCell>
