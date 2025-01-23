@@ -99,7 +99,7 @@ export function CreateProjectModal({
     <Dialog open={isOpen} onOpenChange={handleOnClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create New Project</DialogTitle>
+          <DialogTitle>Criar Novo Projeto</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

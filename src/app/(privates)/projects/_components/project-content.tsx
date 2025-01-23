@@ -45,7 +45,7 @@ export function ProjectContent({ projects, currentUserId, currentUserName }: IPr
               <Label htmlFor="view-mode">Table View</Label>
             </div>
           )}
-          <Button onClick={() => setIsModalOpen(true)}>Create New Project</Button>
+          <Button onClick={() => setIsModalOpen(true)}>Criar Novo Projeto</Button>
         </div>
       </div>
 
