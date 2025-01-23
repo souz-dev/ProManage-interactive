@@ -24,5 +24,5 @@ export default auth((request) => {
 });
 
 export const config = {
-  matcher: ['/login', '/register', '/dash', '/dash/:path*', '/projects', '/projects/:path*'],
+  matcher: ['/', '/login', '/register', '/dash', '/dash/:path*', '/projects', '/projects/:path*'],
 };
