@@ -128,15 +128,6 @@ AUTH_GOOGLE_SECRET=
 ```
 
 **05 - Configuring Prisma**
-- Install the Prisma CLI globally, if you haven't already:
-```
-npm install -g prisma
-```
-- Generate the Prisma client:
-
-```
-npx prisma generate
-```
 
 - Apply the migrations to the database:
 
