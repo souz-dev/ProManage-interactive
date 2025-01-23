@@ -108,16 +108,12 @@ Install/Update the project dependencies using npm:
 npm install
 ```
 
-**03 - Running the Project**
 
-```bash
-npm run dev
-```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 Please, check the port.
 
-**04 - Setting Environment Variables**
+**03 - Setting Environment Variables**
 
 - Create an .env file in the root of your project and add the following environment variables:
 ```
@@ -125,6 +121,16 @@ DATABASE_URL=
 AUTH_SECRET=
 AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
+```
+
+**04 - Run the Project with Docker**
+
+- Make sure you have Docker installed on your machine. If not, download and install it from the official Docker website.
+
+- Build and run the Docker containers:
+
+```
+docker-compose up --build
 ```
 
 **05 - Configuring Prisma**
@@ -135,16 +141,8 @@ AUTH_GOOGLE_SECRET=
 npx prisma migrate dev
 ```
 
-**06 - Run the Project with Docker**
 
-- Make sure you have Docker installed on your machine. If not, download and install it from the official Docker website.
-
-- Build and run the Docker containers:
-
-```
-docker-compose up --build
-```
-**07 - Run the Project**
+**06 - Run the Project**
 
 ```
 npm run dev
