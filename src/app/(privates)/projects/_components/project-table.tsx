@@ -9,24 +9,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { Edit } from 'lucide-react';
 import { format } from 'date-fns';
-import { Task } from '@prisma/client';
 import { calculateTasksPercentage } from '@/utils/tasksPercentage';
 import { getProjectStatus } from '@/utils/projectStatus';
-
-interface Project {
-  id: number;
-  name: string;
-  status: 'active' | 'delayed' | 'completed';
-  progress: number;
-  startDate: string;
-  endDate: string;
-  responsible: string;
-  tasks: Task[];
-}
+import { IProject } from '@/@types/projectType';
 
 interface ProjectTableProps {
-  projects: Project[];
-  onEdit: (project: Project) => void;
+  projects: IProject[];
+  onEdit: (project: IProject) => void;
 }
 
 export function ProjectTable({ projects, onEdit }: ProjectTableProps) {

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import { IProject } from '@/@types/projectType';
 import { calculateProjectStatusCounts } from '@/utils/projectStatusCounts';
 import { Cell, Pie, PieChart, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 
 interface IProjectStatusChartProps {
-  projects: any[];
+  projects: IProject[];
 }
 
 const COLORS = ['#3b82f6', '#10b981', '#ef4444'];

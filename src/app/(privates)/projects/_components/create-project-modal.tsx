@@ -27,19 +27,16 @@ import { toast } from 'sonner';
 import { updateProjectAction } from '@/actions/updateProjectAction';
 import { format } from 'date-fns';
 import { formSchema } from '@/schemas/projectSchema';
+import { IProject } from '@/@types/projectType';
 
 type FormValues = z.infer<typeof formSchema>;
-
-interface CurrentProject extends FormValues {
-  id: string;
-}
 
 interface CreateProjectModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentUserId: string;
   currentUserName: string;
-  currentProject?: CurrentProject;
+  currentProject?: IProject;
 }
 
 export function CreateProjectModal({
@@ -72,7 +69,7 @@ export function CreateProjectModal({
     };
     if (currentProject) {
       try {
-        await updateProjectAction(formatedData, currentProject.id);
+        await updateProjectAction(formatedData, currentProject?.id);
         toast.success('Project updated successfully');
         handleOnClose();
       } catch (error) {

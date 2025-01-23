@@ -6,6 +6,9 @@ export default auth((request) => {
   const { pathname } = request.nextUrl;
   console.log(pathname);
 
+  if (pathname === '/') {
+    return NextResponse.redirect(new URL('/dash', request.url));
+  }
   const privateRoutes = ['/dash', '/projects'];
   const isPrivate = privateRoutes.some((route) => pathname.startsWith(route));
 

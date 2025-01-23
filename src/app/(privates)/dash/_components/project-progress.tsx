@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+import { IProject } from '@/@types/projectType';
 import { calculateTasksPercentage } from '@/utils/tasksPercentage';
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
 interface ProjectProgressProps {
-  projects: any[];
+  projects: IProject[];
 }
 
 export function ProjectProgress({ projects }: ProjectProgressProps) {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
@@ -9,9 +8,10 @@ import { ProjectCard } from './project-card';
 import { ProjectTable } from './project-table';
 import { CreateProjectModal } from './create-project-modal';
 import { PackageOpen } from 'lucide-react';
+import { IProject } from '@/@types/projectType';
 
 interface IProjectContentProps {
-  projects: any[];
+  projects: IProject[];
   currentUserId: string;
   currentUserName: string;
 }
@@ -19,16 +19,16 @@ interface IProjectContentProps {
 export function ProjectContent({ projects, currentUserId, currentUserName }: IProjectContentProps) {
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [selectedProject, setSelectedProject] = useState<IProject | undefined>(undefined);
 
-  const handleEdit = (project: any) => {
+  const handleEdit = (project: IProject) => {
     setSelectedProject(project);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedProject(null);
+    setSelectedProject(undefined);
   };
   return (
     <div>
