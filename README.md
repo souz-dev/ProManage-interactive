@@ -123,15 +123,7 @@ AUTH_GOOGLE_ID=
 AUTH_GOOGLE_SECRET=
 ```
 
-**04 - Configuring Prisma**
-
-- Apply the migrations to the database:
-
-```
-npx prisma migrate dev
-```
-
-**05 - Run the Project with Docker**
+**04 - Run the Project with Docker**
 
 - Make sure you have Docker installed on your machine. If not, download and install it from the official Docker website.
 
@@ -140,6 +132,16 @@ npx prisma migrate dev
 ```
 docker-compose up --build
 ```
+
+**05 - Configuring Prisma**
+
+- Apply the migrations to the database:
+
+```
+npx prisma migrate dev
+```
+
+
 **06 - Run the Project**
 
 ```
