@@ -52,7 +52,7 @@ export function CreateProjectModal({
       name: currentProject ? currentProject.name : '',
       startDate: currentProject ? format(new Date(currentProject.startDate), 'yyyy-MM-dd') : '',
       endDate: currentProject ? format(new Date(currentProject.endDate), 'yyyy-MM-dd') : '',
-      description: currentProject ? currentProject.description : '',
+      description: currentProject && currentProject.description ? currentProject.description : '',
       responsible: currentProject ? currentProject.responsible : currentUserName,
     },
   });

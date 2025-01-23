@@ -3,23 +3,15 @@ import { Button } from '@/components/ui/button';
 import { Delete, Edit } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import Link from 'next/link';
-import { Task } from '@prisma/client';
 import { calculateTasksPercentage } from '@/utils/tasksPercentage';
 import { formatDate } from '@/utils/formatDate';
 import { getProjectStatus } from '@/utils/projectStatus';
 import { deleteProjectAction } from '@/actions/deleteProjectAction';
 import { toast } from 'sonner';
+import { IProject } from '@/@types/projectType';
 
 interface ProjectCardProps {
-  project: {
-    id: string | number;
-    name: string;
-    progress: number;
-    startDate: string;
-    endDate: string;
-    responsible: string;
-    tasks: Task[];
-  };
+  project: IProject;
   onEdit: (id: number) => void;
 }
 

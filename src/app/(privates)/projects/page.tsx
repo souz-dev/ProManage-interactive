@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { ProjectContent } from './_components/project-content';
 import { db } from '@/lib/prisma.client';
+import { IProject } from '@/@types/projectType';
 
 export default async function ProjectsPage() {
   const session = await auth();
@@ -22,9 +23,15 @@ export default async function ProjectsPage() {
     },
   });
 
+  const projectsWithProgress: IProject[] = projects.map((project) => {
+    return {
+      ...project,
+    };
+  });
+
   return (
     <ProjectContent
-      projects={projects}
+      projects={projectsWithProgress}
       currentUserId={currentUser.id}
       currentUserName={currentUser.name}
     />
