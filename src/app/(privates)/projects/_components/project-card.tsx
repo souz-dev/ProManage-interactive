@@ -34,8 +34,9 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
   const projectStatus = getProjectStatus(project);
 
   const handleDelete = async (id: string) => {
+    console.log(`Deleting project ${id}`);
     try {
-      deleteProjectAction(id);
+      await deleteProjectAction(id);
       toast.success('Project deleted successfully');
     } catch (error) {
       toast.error('Failed to delete project. Please try again.');
@@ -52,7 +53,7 @@ export function ProjectCard({ project, onEdit }: ProjectCardProps) {
             <Button variant="ghost" size="icon" onClick={() => onEdit(Number(project.id))}>
               <Edit className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={() => handleDelete(project.id as string)}>
+            <Button variant="ghost" size="icon" onClick={() => handleDelete(String(project.id))}>
               <Delete className="h-4 w-4" />
             </Button>
           </div>
